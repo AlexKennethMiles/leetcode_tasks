@@ -1,4 +1,4 @@
-package tasks.leetcode.array;
+package tasks.leetcode.string;
 
 import java.util.HashMap;
 import java.util.Map;

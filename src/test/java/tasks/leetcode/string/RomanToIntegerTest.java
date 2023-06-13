@@ -1,4 +1,4 @@
-package tasks.leetcode.array;
+package tasks.leetcode.string;
 
 import org.junit.jupiter.api.Test;
 
