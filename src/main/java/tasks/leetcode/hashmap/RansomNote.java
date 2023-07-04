@@ -10,26 +10,25 @@ import java.util.Map;
  * 2.1. Если есть в dict и частота > 0, то увеличиваем count и вычитаем частоту из словаря по этому символу
  * 2.2. Если нет, то значит и не будет => return false
  * 3. Если не упали в 2.2. то, сверяем count c ransomNote.length
+ * <p>
+ * === ОПТИМИЗАЦИЯ ASCII ===
+ * 1. Создаём фиксированный словарь на 26 строчных английских букв (условие задачи)
+ * 2. Вычитая из символа 'a' (int ~ 97) можно получить позицию в dict
+ * 3. Проходим magazine и инкрементируем в dict соотв. позицию
+ * 4. Проходим ransomNote и декрементируем в dict соотв. позицию
+ * 5. Если по позиции образуется минус, значит в magazine не хватает символов, иначе true
  */
 public class RansomNote {
     public static boolean canConstruct(String ransomNote, String magazine) {
-        Map<Character, Integer> dict = new HashMap<>();
+        int[] dict = new int[26];
         for (char c : magazine.toCharArray()) {
-            if (dict.containsKey(c)) {
-                dict.put(c, dict.get(c) + 1);
-            } else {
-                dict.put(c, 1);
-            }
+            dict[c - 'a']++;
         }
-        int count = 0;
         for (char c : ransomNote.toCharArray()) {
-            if (dict.containsKey(c) && dict.get(c) > 0) {
-                dict.put(c, dict.get(c) - 1);
-                count++;
-            } else {
-                break;
+            if (--dict[c - 'a'] < 0) {
+                return false;
             }
         }
-        return count == ransomNote.length();
+        return true;
     }
 }
