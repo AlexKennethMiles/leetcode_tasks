@@ -38,36 +38,37 @@ public class FiniteDifference {
     private static void prepare() {
         for (int i = 0; i < A.length; i++) {
             for (int j = 0; j < A[i].length; j++) {
-                A[i][j] = BigDecimal.valueOf(0); // Матрица A квадратная
+                A[i][j] = BigDecimal.valueOf(0); // Матрица A квадратная, то есть двумерная, поэтому двойная вложенность
             }
-            b[i] = BigDecimal.valueOf(0); // Матрица b прямоугольная, с одним столбцом
+            b[i] = BigDecimal.valueOf(0); // Матрица b прямоугольная, с одним столбцом, то есть одномерная
         }
     }
 
     // Вычисление коэффициентов при неизвестных
     private static void compute(BigDecimal x, int i) {
         if (x.compareTo(BigDecimal.valueOf(-7)) == 0) { // Если x равен -7
-            A[i][0] = BigDecimal.valueOf(1).add(BigDecimal.valueOf(-2.5));
-            A[i][1] = BigDecimal.valueOf(2.5);
+            A[i][0] = BigDecimal.valueOf(1).subtract(BigDecimal.valueOf(25)); // 1-5/2*0.1 = 1-25 = -24
+            A[i][1] = BigDecimal.valueOf(25); // 5/2*0.1 = 0.625
             b[i] = BigDecimal.valueOf(0);
         } else if (x.compareTo(BigDecimal.valueOf(-7)) == 1 // Если x больше -7
                 && x.compareTo(BigDecimal.valueOf(5)) == -1) { // И меньше 5, то:
-            System.out.print("");
             // Переменная для хранения выражения:
             // sin|x|    это синус от икс по модулю (то есть без учёта знака икса, например, |-3| = 3 или |2| = 2)
             // ______
-            //   4
-            BigDecimal sinXDiv4 = BigDecimal.valueOf(Math.sin(Math.abs(x.doubleValue())))
-                    .divide(BigDecimal.valueOf(4));
+            // 2*0.1
+            BigDecimal sinIXIDiv_0_2 = BigDecimal.valueOf(Math.sin(Math.abs(x.doubleValue())))
+                    .divide(
+                            BigDecimal.valueOf(2).multiply(BigDecimal.valueOf(0.1))
+                    );
             // Данная ситуация даёт значение для трёх y, например, для y1,y2,y3, потом для y2,y3,y4 и т.д.
-            A[i][i - 1] = BigDecimal.valueOf(0.25) // 1/4
-                    .subtract(sinXDiv4); // Минус (sin|x|)/4;
+            A[i][i - 1] = BigDecimal.valueOf(100) // 1/0.1^2= 1/0.01=100
+                    .subtract(sinIXIDiv_0_2); // Минус (sin|x|)/0.2;
 
             A[i][i] = BigDecimal.valueOf(2).multiply(x) // 2*x
-                    .subtract(BigDecimal.valueOf(0.5)); // Минус 2/4
+                    .subtract(BigDecimal.valueOf(200)); // Минус 2/0.1^2 = 2/0.01 = 200
 
-            A[i][i + 1] = BigDecimal.valueOf(0.25) // 1/4
-                    .add(sinXDiv4); // Плюс (sin|x|)/4
+            A[i][i + 1] = BigDecimal.valueOf(100) // 1/0.1^2= 1/0.01=100
+                    .add(sinIXIDiv_0_2); // Плюс (sin|x|)/0.2
 
             b[i] = x.multiply(BigDecimal.valueOf(-1));
 
@@ -92,7 +93,7 @@ public class FiniteDifference {
                 b2 = i;
             }
         }
-        int b3 = Integer.MIN_VALUE; // Находим шаг компьютерного счёта, на котором b=3
+        int b3 = Integer.MIN_VALUE; // Находим шаг компьютерного счёта, на котором b=-1
         for (int i = 0; i < b.length; i++) {
             if (b[i].compareTo(BigDecimal.valueOf(-1)) == 0) {
                 b3 = i;
@@ -103,7 +104,7 @@ public class FiniteDifference {
         System.out.println("Для шага i=1: [ " + A[0][0] + ", " + A[0][1] + ", " + A[0][2] + ", " + A[0][3] + " ]");
         System.out.println("Для шага i=" + b2 + ": [ " + A[b2][b2 - 1] + ", " + A[b2][b2] + ", " + A[b2][b2 + 1] + ", " + A[b2][b2 + 2] + " ]");
         System.out.println("Для шага i=" + b3 + ": [ " + A[b3][b3 - 2] + ", " + A[b3][b3 - 1] + ", " + A[b3][b3] + ", " + A[b3][b3 + 1] + " ]");
-        System.out.println("Для шага i=121: [ " + A[120][118] + ", " + A[120][119] + ", " + A[120][120] + " ]");
+        System.out.println("Для шага i=121: [ " + A[120][117] + ", " + A[120][118] + ", " + A[120][119] + ", " + A[120][120] + " ]");
 
         System.out.println("Матрица вектора b на шаге i=1," + b2 + "," + b3 + "," + "121:");
         System.out.println("Для шага i=1: [ " + b[0] + " ]");
